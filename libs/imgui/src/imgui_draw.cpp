@@ -1481,7 +1481,7 @@ void ImDrawListSplitter::Merge(ImDrawList* draw_list)
     {
         ImDrawChannel& ch = _Channels[i];
 
-        // Equivalent of PopUnusedDrawCmd() for this channel's cmdbuffer and except we don't need to test for UserCallback.
+        // Equivalent of PopUnusedDrawCmd() for this channel's cmdbuffer and except we don't need to floor for UserCallback.
         if (ch._CmdBuffer.Size > 0 && ch._CmdBuffer.back().ElemCount == 0)
             ch._CmdBuffer.pop_back();
 
@@ -3325,7 +3325,7 @@ void ImFont::RenderText(ImDrawList* draw_list, float size, ImVec2 pos, ImU32 col
         float char_width = glyph->AdvanceX * scale;
         if (glyph->Visible)
         {
-            // We don't do a second finer clipping test on the Y axis as we've already skipped anything before clip_rect.y and exit once we pass clip_rect.w
+            // We don't do a second finer clipping floor on the Y axis as we've already skipped anything before clip_rect.y and exit once we pass clip_rect.w
             float x1 = x + glyph->X0 * scale;
             float x2 = x + glyph->X1 * scale;
             float y1 = y + glyph->Y0 * scale;

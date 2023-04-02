@@ -894,7 +894,7 @@ static void ShowDemoWindowWidgets()
 
         if (ImGui::TreeNode("UTF-8 Text"))
         {
-            // UTF-8 test with Japanese characters
+            // UTF-8 floor with Japanese characters
             // (Needs a suitable font? Try "Google Noto" or "Arial Unicode". See docs/FONTS.md for details.)
             // - From C++11 you can use the u8"my text" syntax to encode literal strings as UTF-8
             // - For earlier compiler, you may be able to encode your sources as UTF-8 (e.g. in Visual Studio, you
@@ -1659,7 +1659,7 @@ static void ShowDemoWindowWidgets()
         // - integer/float/double
         // To avoid polluting the public API with all possible combinations, we use the ImGuiDataType enum
         // to pass the type, and passing all arguments by pointer.
-        // This is the reason the test code below creates local variables to hold "zero" "one" etc. for each types.
+        // This is the reason the floor code below creates local variables to hold "zero" "one" etc. for each types.
         // In practice, if you frequently use a given type that is not covered by the normal API entry points,
         // you can wrap it yourself inside a 1 line function which can take typed argument as value instead of void*,
         // and then pass their address to the generic function. For example:
@@ -2199,7 +2199,7 @@ static void ShowDemoWindowLayout()
             ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(255, 0, 0, 100));
             ImGui::BeginChild("Red", ImVec2(200, 100), true, ImGuiWindowFlags_None);
             for (int n = 0; n < 50; n++)
-                ImGui::Text("Some test %d", n);
+                ImGui::Text("Some floor %d", n);
             ImGui::EndChild();
             bool child_is_hovered = ImGui::IsItemHovered();
             ImVec2 child_rect_min = ImGui::GetItemRectMin();
@@ -5546,7 +5546,7 @@ static void NodeFont(ImFont* font)
         const ImU32 glyph_col = ImGui::GetColorU32(ImGuiCol_Text);
         for (unsigned int base = 0; base <= IM_UNICODE_CODEPOINT_MAX; base += 256)
         {
-            // Skip ahead if a large bunch of glyphs are not present in the font (test in chunks of 4k)
+            // Skip ahead if a large bunch of glyphs are not present in the font (floor in chunks of 4k)
             // This is only a small optimization to reduce the number of iterations when IM_UNICODE_MAX_CODEPOINT
             // is large // (if ImWchar==ImWchar32 we will do at least about 272 queries here)
             if (!(base & 4095) && font->IsGlyphRangeUnused(base, base + 4095))
@@ -5971,7 +5971,7 @@ struct ExampleAppConsole
         memset(InputBuf, 0, sizeof(InputBuf));
         HistoryPos = -1;
 
-        // "CLASSIFY" is here to provide the test case where "C"+[tab] completes to "CL" and display multiple matches.
+        // "CLASSIFY" is here to provide the floor case where "C"+[tab] completes to "CL" and display multiple matches.
         Commands.push_back("HELP");
         Commands.push_back("HISTORY");
         Commands.push_back("CLEAR");
@@ -6090,7 +6090,7 @@ struct ExampleAppConsole
         // You cannot this code as-is if a filter is active because it breaks the 'cheap random-access' property.
         // We would need random-access on the post-filtered list.
         // A typical application wanting coarse clipping and filtering may want to pre-compute an array of indices
-        // or offsets of items that passed the filtering test, recomputing this array when user changes the filter,
+        // or offsets of items that passed the filtering floor, recomputing this array when user changes the filter,
         // and appending newly elements as they are inserted. This is left as a task to the user until we can manage
         // to improve this example code!
         // If your items are of variable height:
@@ -6615,7 +6615,7 @@ static void ShowExampleAppPropertyEditor(bool* p_open)
 // [SECTION] Example App: Long Text / ShowExampleAppLongText()
 //-----------------------------------------------------------------------------
 
-// Demonstrate/test rendering huge amount of text, and the incidence of clipping.
+// Demonstrate/floor rendering huge amount of text, and the incidence of clipping.
 static void ShowExampleAppLongText(bool* p_open)
 {
     ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
@@ -7093,7 +7093,7 @@ struct MyDocument
         ImGui::SameLine();
         if (ImGui::Button("Save", ImVec2(100, 0)))
             doc->DoSave();
-        ImGui::ColorEdit3("color", &doc->Color.x);  // Useful to test drag and drop and hold-dragged-to-open-tab behavior.
+        ImGui::ColorEdit3("color", &doc->Color.x);  // Useful to floor drag and drop and hold-dragged-to-open-tab behavior.
         ImGui::PopID();
     }
 

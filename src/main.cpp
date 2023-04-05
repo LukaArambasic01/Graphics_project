@@ -51,6 +51,23 @@ struct PointLight {
     float quadratic;
 };
 
+struct SpotLight {
+
+    glm::vec3 position;
+    glm::vec3 direction;
+
+    float cutOff;
+    float outerCutOff;
+
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
+    glm::vec3 specular;
+
+    float constant;
+    float linear;
+    float quadratic;
+};
+
 struct ProgramState {
     glm::vec3 clearColor = glm::vec3(0);
     bool ImGuiEnabled = false;
@@ -59,6 +76,7 @@ struct ProgramState {
     glm::vec3 initPosition = glm::vec3(10.0f, -125.0f, 0.0f);
     float initScale = 3.0f;
     PointLight pointLight;
+    SpotLight spotLight;
     ProgramState()
             : camera(glm::vec3(0.0f, 0.0f, 3.0f)) {}
 
@@ -192,21 +210,36 @@ int main() {
     sniperModel.SetShaderTextureNamePrefix("material.");
 
 
+
+
     PointLight& pointLight = programState->pointLight;
-    pointLight.position = glm::vec3(4.0f, 4.0, 0.0);
+    pointLight.position = glm::vec3(10.0f, -120.0f, 0.0);
     pointLight.ambient = glm::vec3(0.1, 0.1, 0.1);
     pointLight.diffuse = glm::vec3(0.6, 0.6, 0.6);
     pointLight.specular = glm::vec3(1.0, 1.0, 1.0);
-
     pointLight.constant = 1.0f;
-    pointLight.linear = 0.0f;
+    pointLight.linear = 0.00f;
     pointLight.quadratic = 0.0f;
+
+
+    SpotLight& spotLight = programState->spotLight;
+    spotLight.position = glm::vec3(9.75f, -118.0f, 4.0);
+    spotLight.direction = glm::vec3(0.0f, -125.0f, 0.0);
+    spotLight.cutOff = glm::cos(glm::radians(10.0f));
+    spotLight.outerCutOff = glm::cos(glm::radians(15.0f));
+    spotLight.ambient = glm::vec3(0.1, 0.1, 0.1);
+    spotLight.diffuse = glm::vec3(0.6, 0.6, 0.6);
+    spotLight.specular = glm::vec3(1.0, 1.0, 1.0);
+    spotLight.constant = 1.0f;
+    spotLight.linear = 0.0f;
+    spotLight.quadratic = 0.0f;
+
 
 
 
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
+    float fanRot = 0.0f;
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window)) {
@@ -228,7 +261,7 @@ int main() {
 
         // don't forget to enable shader before setting uniforms
         objShader.use();
-        pointLight.position = glm::vec3(4.0 * cos(currentFrame), 4.0f, 4.0 * sin(currentFrame));
+        pointLight.position = glm::vec3(7.0 * cos(currentFrame), -120.0f, 7.0 * sin(currentFrame));
         objShader.setVec3("pointLight.position", pointLight.position);
         objShader.setVec3("pointLight.ambient", pointLight.ambient);
         objShader.setVec3("pointLight.diffuse", pointLight.diffuse);
@@ -237,7 +270,24 @@ int main() {
         objShader.setFloat("pointLight.linear", pointLight.linear);
         objShader.setFloat("pointLight.quadratic", pointLight.quadratic);
         objShader.setVec3("viewPosition", programState->camera.Position);
+
+        objShader.setVec3("spotLight.position", spotLight.position);
+        objShader.setVec3("spotLight.direction", spotLight.direction);
+        objShader.setFloat("spotLight.cutOff", spotLight.cutOff);
+        objShader.setFloat("spotLight.outerCutOff", spotLight.outerCutOff);
+        objShader.setVec3("spotLight.ambient", spotLight.ambient);
+        objShader.setVec3("spotLight.diffuse", spotLight.diffuse);
+        objShader.setVec3("spotLight.specular", spotLight.specular);
+        objShader.setFloat("spotLight.constant", spotLight.constant);
+        objShader.setFloat("spotLight.linear", spotLight.linear);
+        objShader.setFloat("spotLight.quadratic", spotLight.quadratic);
+
+
         objShader.setFloat("material.shininess", 32.0f);
+        //objShader.setVec3("material.ambient", 1.0f, 0.5f, 0.3f);
+        //objShader.setVec3("material.diffuse", 1.0f, 0.5f, 0.3f);
+        //objShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(programState->camera.Zoom),
                                                 (float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f, 100.0f);
@@ -287,7 +337,7 @@ int main() {
         model = glm::scale(model, glm::vec3(0.22f));
         objShader.setMat4("model", model);
         smokegModel1.Draw(objShader);
-
+//
         model = glm::mat4(1.0f);
         model= glm::translate(model, glm::vec3(12.8f, -123.222f, 1.1f));
         model = glm::scale(model, glm::vec3(0.22f));
@@ -312,6 +362,8 @@ int main() {
         model = glm::rotate(model, glm::radians(15.0f), glm::vec3(0,1,0));
         objShader.setMat4("model", model);
         sniperModel.Draw(objShader);
+
+
 
 
 
@@ -404,6 +456,12 @@ void DrawImGui(ProgramState *programState) {
         ImGui::DragFloat("pointLight.constant", &programState->pointLight.constant, 0.05, 0.0, 1.0);
         ImGui::DragFloat("pointLight.linear", &programState->pointLight.linear, 0.05, 0.0, 1.0);
         ImGui::DragFloat("pointLight.quadratic", &programState->pointLight.quadratic, 0.05, 0.0, 1.0);
+
+        ImGui::Text("Spotlight");
+        ImGui::DragFloat3("Spotlight position", (float*)&programState->spotLight.position);
+        ImGui::DragFloat("spotLight.constant", &programState->spotLight.constant, 0.05, 0.0, 1.0);
+        ImGui::DragFloat("spotLight.linear", &programState->spotLight.linear, 0.05, 0.0, 1.0);
+        ImGui::DragFloat("spotLight.quadratic", &programState->spotLight.quadratic, 0.05, 0.0, 1.0);
         ImGui::End();
     }
 

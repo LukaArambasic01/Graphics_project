@@ -23,5 +23,5 @@ illum 2
 map_Kd base.png
 map_Bump normal.png
 map_Ns roughness.png
-refl refl.png
+refl metallic.png
 

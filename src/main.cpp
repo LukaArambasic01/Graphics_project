@@ -177,9 +177,18 @@ int main() {
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
 
+    // blending
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    // face culling
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+
     // build and compile shaders
     // -------------------------
     Shader objShader("resources/shaders/2.model_lighting.vs", "resources/shaders/2.model_lighting.fs");
+    Shader blendShader("resources/shaders/blending.vs", "resources/shaders/blending.fs");
 
     // load models
     // -----------
@@ -189,26 +198,31 @@ int main() {
     Model sceneModel("resources/objects/scene/bank.obj");
     sceneModel.SetShaderTextureNamePrefix("material.");
 
-    Model tvModel("resources/objects/tv/Old_Tv.obj");
-    tvModel.SetShaderTextureNamePrefix("material.");
+//    Model tvModel("resources/objects/tv/Old_Tv.obj");
+//    tvModel.SetShaderTextureNamePrefix("material.");
+//
+//    Model chairModel("resources/objects/chair/Chair2.obj");
+//    chairModel.SetShaderTextureNamePrefix("material.");
+//
+//    Model gunModel("resources/objects/gun/m1911pistol.obj");
+//    gunModel.SetShaderTextureNamePrefix("material.");
+//
+//    Model smokegModel1("resources/objects/smokeg/smokeg.obj");
+//    smokegModel1.SetShaderTextureNamePrefix("material.");
+//    Model smokegModel2("resources/objects/smokeg/smokeg.obj");
+//    smokegModel2.SetShaderTextureNamePrefix("material.");
+//
+//    Model arModel("resources/objects/ar/Reference.obj");
+//    arModel.SetShaderTextureNamePrefix("material.");
+//
+//    Model sniperModel("resources/objects/sniper/Model.obj");
+//    sniperModel.SetShaderTextureNamePrefix("material.");
 
-    Model chairModel("resources/objects/chair/Chair2.obj");
-    chairModel.SetShaderTextureNamePrefix("material.");
+    Model picModel("resources/objects/picture/picture.obj");
+    picModel.SetShaderTextureNamePrefix("material.");
 
-    Model gunModel("resources/objects/gun/m1911pistol.obj");
-    gunModel.SetShaderTextureNamePrefix("material.");
-
-    Model smokegModel1("resources/objects/smokeg/smokeg.obj");
-    smokegModel1.SetShaderTextureNamePrefix("material.");
-    Model smokegModel2("resources/objects/smokeg/smokeg.obj");
-    smokegModel2.SetShaderTextureNamePrefix("material.");
-
-    Model arModel("resources/objects/ar/Reference.obj");
-    arModel.SetShaderTextureNamePrefix("material.");
-
-    Model sniperModel("resources/objects/sniper/Model.obj");
-    sniperModel.SetShaderTextureNamePrefix("material.");
-
+    Model glassModel("resources/objects/glass/glass.obj");
+    glassModel.SetShaderTextureNamePrefix("material.");
 
 
 
@@ -239,7 +253,6 @@ int main() {
 
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    float fanRot = 0.0f;
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window)) {
@@ -308,60 +321,81 @@ int main() {
         objShader.setMat4("model", model);
         sceneModel.Draw(objShader);
 
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(12.6f, -122.92f, -0.7f));
-        model = glm::scale(model, glm::vec3(0.3f));
-        model = glm::rotate(model, glm::radians(-30.0f), glm::vec3(0,1,0));
-        objShader.setMat4("model", model);
-        tvModel.Draw(objShader);
-
-        model = glm::mat4(1.0f);
-        model= glm::translate(model, glm::vec3(9.3f, -124.0f, 4.7f));
-        model = glm::scale(model, glm::vec3(0.0025f));
-        model = glm::rotate(model, glm::radians(3.0f), glm::vec3(1,0,0));
-        model = glm::rotate(model, glm::radians(3.0f), glm::vec3(0,0,1));
-        model = glm::rotate(model, glm::radians(135.0f), glm::vec3(0,1,0));
-        objShader.setMat4("model", model);
-        chairModel.Draw(objShader);
-
-        model = glm::mat4(1.0f);
-        model= glm::translate(model, glm::vec3(12.5f, -123.373f, 1.7f));
-        model = glm::scale(model, glm::vec3(0.045));
-        model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0,0,1));
-        model = glm::rotate(model, glm::radians(-135.0f), glm::vec3(1,0,0));
-        objShader.setMat4("model", model);
-        gunModel.Draw(objShader);
-
-        model = glm::mat4(1.0f);
-        model= glm::translate(model, glm::vec3(12.6f, -123.222f, 0.9f));
-        model = glm::scale(model, glm::vec3(0.22f));
-        objShader.setMat4("model", model);
-        smokegModel1.Draw(objShader);
+//        model = glm::mat4(1.0f);
+//        model = glm::translate(model, glm::vec3(12.6f, -122.92f, -0.7f));
+//        model = glm::scale(model, glm::vec3(0.3f));
+//        model = glm::rotate(model, glm::radians(-30.0f), glm::vec3(0,1,0));
+//        objShader.setMat4("model", model);
+//        tvModel.Draw(objShader);
 //
-        model = glm::mat4(1.0f);
-        model= glm::translate(model, glm::vec3(12.8f, -123.222f, 1.1f));
-        model = glm::scale(model, glm::vec3(0.22f));
-        objShader.setMat4("model", model);
-        smokegModel2.Draw(objShader);
+//        model = glm::mat4(1.0f);
+//        model= glm::translate(model, glm::vec3(9.3f, -124.0f, 4.7f));
+//        model = glm::scale(model, glm::vec3(0.0025f));
+//        model = glm::rotate(model, glm::radians(3.0f), glm::vec3(1,0,0));
+//        model = glm::rotate(model, glm::radians(3.0f), glm::vec3(0,0,1));
+//        model = glm::rotate(model, glm::radians(135.0f), glm::vec3(0,1,0));
+//        objShader.setMat4("model", model);
+//        chairModel.Draw(objShader);
+//
+//        model = glm::mat4(1.0f);
+//        model= glm::translate(model, glm::vec3(12.5f, -123.373f, 1.7f));
+//        model = glm::scale(model, glm::vec3(0.045));
+//        model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0,0,1));
+//        model = glm::rotate(model, glm::radians(-135.0f), glm::vec3(1,0,0));
+//        objShader.setMat4("model", model);
+//        gunModel.Draw(objShader);
+//
+//        model = glm::mat4(1.0f);
+//        model= glm::translate(model, glm::vec3(12.6f, -123.222f, 0.9f));
+//        model = glm::scale(model, glm::vec3(0.22f));
+//        objShader.setMat4("model", model);
+//        smokegModel1.Draw(objShader);
+
+//        model = glm::mat4(1.0f);
+//        model= glm::translate(model, glm::vec3(12.8f, -123.222f, 1.1f));
+//        model = glm::scale(model, glm::vec3(0.22f));
+//        objShader.setMat4("model", model);
+//        smokegModel2.Draw(objShader);
+//
+//        model = glm::mat4(1.0f);
+//        model= glm::translate(model, glm::vec3(10.1f, -123.22f, 4.3f));
+//        model = glm::scale(model, glm::vec3(0.1f));
+//        model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1,0,0));
+//        model = glm::rotate(model, glm::radians(225.0f), glm::vec3(0,0,1));
+//        model = glm::rotate(model, glm::radians(-15.0f), glm::vec3(0,1,0));
+//        model = glm::rotate(model, glm::radians(15.0f), glm::vec3(0,0,1));
+//        objShader.setMat4("model", model);
+//        arModel.Draw(objShader);
+//
+//        model = glm::mat4(1.0f);
+//        model= glm::translate(model, glm::vec3(8.5f, -124.393f, 2.415f));
+//        model = glm::scale(model, glm::vec3(0.06f));
+//        model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1,0,0));
+//        model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0,0,1));
+//        model = glm::rotate(model, glm::radians(15.0f), glm::vec3(0,1,0));
+//        objShader.setMat4("model", model);
+//        sniperModel.Draw(objShader);
 
         model = glm::mat4(1.0f);
-        model= glm::translate(model, glm::vec3(10.1f, -123.22f, 4.3f));
-        model = glm::scale(model, glm::vec3(0.1f));
-        model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1,0,0));
-        model = glm::rotate(model, glm::radians(225.0f), glm::vec3(0,0,1));
-        model = glm::rotate(model, glm::radians(-15.0f), glm::vec3(0,1,0));
-        model = glm::rotate(model, glm::radians(15.0f), glm::vec3(0,0,1));
+        model = glm::translate(model, glm::vec3(10.0f, -120.0f, -5.0f));
+        model = glm::scale(model, glm::vec3(5.0f));
+        model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0,1,0));
         objShader.setMat4("model", model);
-        arModel.Draw(objShader);
+        picModel.Draw(objShader);
+
+
+        // Blending
+        blendShader.use();
+        blendShader.setMat4("projection", projection);
+        blendShader.setMat4("view", view);
 
         model = glm::mat4(1.0f);
-        model= glm::translate(model, glm::vec3(8.5f, -124.393f, 2.415f));
-        model = glm::scale(model, glm::vec3(0.06f));
-        model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1,0,0));
-        model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0,0,1));
-        model = glm::rotate(model, glm::radians(15.0f), glm::vec3(0,1,0));
-        objShader.setMat4("model", model);
-        sniperModel.Draw(objShader);
+        model = glm::translate(model, glm::vec3(15.0f, -117.5f, 2.5f));
+        model = glm::scale(model, glm::vec3(7.5));
+        blendShader.setMat4("model", model);
+        glassModel.Draw(blendShader);
+
+
 
 
 

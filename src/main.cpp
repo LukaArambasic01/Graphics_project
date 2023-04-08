@@ -75,6 +75,7 @@ struct ProgramState {
     bool CameraMouseMovementUpdateEnabled = false;
     glm::vec3 initPosition = glm::vec3(10.0f, -125.0f, 0.0f);
     float initScale = 3.0f;
+    float blendConst = 0.2f;
     PointLight pointLight;
     SpotLight spotLight;
     ProgramState()
@@ -187,7 +188,7 @@ int main() {
 
     // build and compile shaders
     // -------------------------
-    Shader objShader("resources/shaders/2.model_lighting.vs", "resources/shaders/2.model_lighting.fs");
+    Shader objShader("resources/shaders/model_lighting.vs", "resources/shaders/model_lighting.fs");
     Shader blendShader("resources/shaders/blending.vs", "resources/shaders/blending.fs");
 
     // load models
@@ -247,6 +248,8 @@ int main() {
     spotLight.constant = 1.0f;
     spotLight.linear = 0.0f;
     spotLight.quadratic = 0.0f;
+
+    float& blendConst = programState->blendConst;
 
 
 
@@ -388,6 +391,7 @@ int main() {
         blendShader.use();
         blendShader.setMat4("projection", projection);
         blendShader.setMat4("view", view);
+        blendShader.setFloat("blendConst", blendConst);
 
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(15.0f, -117.5f, 2.5f));
@@ -486,7 +490,6 @@ void DrawImGui(ProgramState *programState) {
         ImGui::ColorEdit3("Background color", (float *) &programState->clearColor);
         ImGui::DragFloat3("Object position", (float*)&programState->initPosition);
         ImGui::DragFloat("Object scale", &programState->initScale, 0.05, 0.1, 4.0);
-
         ImGui::DragFloat("pointLight.constant", &programState->pointLight.constant, 0.05, 0.0, 1.0);
         ImGui::DragFloat("pointLight.linear", &programState->pointLight.linear, 0.05, 0.0, 1.0);
         ImGui::DragFloat("pointLight.quadratic", &programState->pointLight.quadratic, 0.05, 0.0, 1.0);
@@ -496,7 +499,13 @@ void DrawImGui(ProgramState *programState) {
         ImGui::DragFloat("spotLight.constant", &programState->spotLight.constant, 0.05, 0.0, 1.0);
         ImGui::DragFloat("spotLight.linear", &programState->spotLight.linear, 0.05, 0.0, 1.0);
         ImGui::DragFloat("spotLight.quadratic", &programState->spotLight.quadratic, 0.05, 0.0, 1.0);
+
+        ImGui::Text("Other");
+        ImGui::DragFloat("blending constant", &programState->blendConst, 0.05, 0.0, 1.0);
+
         ImGui::End();
+
+
     }
 
     {

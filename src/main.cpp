@@ -213,10 +213,8 @@ int main() {
     Model gunModel("resources/objects/gun/m1911pistol.obj");
     gunModel.SetShaderTextureNamePrefix("material.");
 
-    Model smokegModel1("resources/objects/smokeg/smokeg.obj");
-    smokegModel1.SetShaderTextureNamePrefix("material.");
-    Model smokegModel2("resources/objects/smokeg/smokeg.obj");
-    smokegModel2.SetShaderTextureNamePrefix("material.");
+    Model smokegModel("resources/objects/smokeg/smokeg.obj");
+    smokegModel.SetShaderTextureNamePrefix("material.");
 
     Model arModel("resources/objects/ar/Reference.obj");
     arModel.SetShaderTextureNamePrefix("material.");
@@ -422,13 +420,13 @@ int main() {
         model= glm::translate(model, glm::vec3(12.6f, -123.222f, 0.9f));
         model = glm::scale(model, glm::vec3(0.22f));
         objShader.setMat4("model", model);
-        smokegModel1.Draw(objShader);
+        smokegModel.Draw(objShader);
 
         model = glm::mat4(1.0f);
         model= glm::translate(model, glm::vec3(12.8f, -123.222f, 1.1f));
         model = glm::scale(model, glm::vec3(0.22f));
         objShader.setMat4("model", model);
-        smokegModel2.Draw(objShader);
+        smokegModel.Draw(objShader);
 
         model = glm::mat4(1.0f);
         model= glm::translate(model, glm::vec3(10.1f, -123.22f, 4.3f));

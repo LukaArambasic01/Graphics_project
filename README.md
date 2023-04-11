@@ -1,3 +1,6 @@
+# Link ka videu  
+https://www.youtube.com/watch?v=ZmVRaWG09bQ
+
 # O projektu
 Scena inspirisana igricom "Payday"  
 Projekat je radjen za kurs racunarske grafike  
@@ -16,6 +19,8 @@ Wallpaper: https://wall.alphacoders.com/big.php?i=371769
 
 
 # Uputstvo
-F1 pali i gasi ImGui  
-F2 pali anti-aliasing  
-F3 gasi anti-aliasing
+WASD - pomeranje kamere
+mouse scroll - zoom  
+F1 - pali i gasi ImGui  
+F2 - pali anti-aliasing  
+F3 - gasi anti-aliasing
